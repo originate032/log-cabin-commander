@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,21 +7,18 @@ import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown, ChevronRight, MessageSquare, Settings } from 'lucide-react';
 import { ProcessedLogEntry } from '@/types/log';
-
 interface LogEntryProps {
   log: ProcessedLogEntry;
   onProcessedChange: (processed: boolean) => void;
   onCommentChange: (comment: string) => void;
 }
-
 export const LogEntry: React.FC<LogEntryProps> = ({
   log,
   onProcessedChange,
-  onCommentChange,
+  onCommentChange
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [comment, setComment] = useState(log.comment || '');
-
   const getStatusColor = (status?: string) => {
     switch (status?.toLowerCase()) {
       case 'error':
@@ -38,44 +34,33 @@ export const LogEntry: React.FC<LogEntryProps> = ({
         return 'outline';
     }
   };
-
   const getStatusIcon = (status?: string) => {
     return status ? '●' : '○';
   };
-
   const handleCommentBlur = () => {
     if (comment !== log.comment) {
       onCommentChange(comment);
     }
   };
-
   const displayText = log.summary || log.message || 'Нет описания';
-
-  return (
-    <Card className={`mb-3 transition-all ${log.processed ? 'opacity-75 bg-gray-50' : ''}`}>
+  return <Card className={`mb-3 transition-all ${log.processed ? 'opacity-75 bg-gray-50' : ''}`}>
       <CardContent className="p-4">
         <div className="space-y-3">
           {/* Основная информация */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 space-y-2">
               <div className="flex items-center gap-2 flex-wrap">
-                {log.service && (
-                  <Badge variant="outline" className="text-xs">
+                {log.service && <Badge variant="outline" className="text-xs">
                     <Settings className="h-3 w-3 mr-1" />
                     {log.service}
-                  </Badge>
-                )}
-                {log.status && (
-                  <Badge variant={getStatusColor(log.status)} className="text-xs">
+                  </Badge>}
+                {log.status && <Badge variant={getStatusColor(log.status)} className="text-xs bg-yellow-400">
                     <span className="mr-1">{getStatusIcon(log.status)}</span>
                     {log.status}
-                  </Badge>
-                )}
-                {log.timestamp && (
-                  <Badge variant="outline" className="text-xs">
+                  </Badge>}
+                {log.timestamp && <Badge variant="outline" className="text-xs">
                     {new Date(log.timestamp).toLocaleString()}
-                  </Badge>
-                )}
+                  </Badge>}
               </div>
               
               <p className="text-sm text-gray-700 leading-relaxed">
@@ -84,19 +69,11 @@ export const LogEntry: React.FC<LogEntryProps> = ({
             </div>
 
             <div className="flex items-center gap-2">
-              <Checkbox
-                checked={log.processed}
-                onCheckedChange={onProcessedChange}
-                className="mt-1"
-              />
+              <Checkbox checked={log.processed} onCheckedChange={onProcessedChange} className="mt-1" />
               <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
                 <CollapsibleTrigger asChild>
                   <Button variant="ghost" size="sm">
-                    {isExpanded ? (
-                      <ChevronDown className="h-4 w-4" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4" />
-                    )}
+                    {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                   </Button>
                 </CollapsibleTrigger>
               </Collapsible>
@@ -111,14 +88,7 @@ export const LogEntry: React.FC<LogEntryProps> = ({
                 Комментарий:
               </label>
             </div>
-            <Textarea
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              onBlur={handleCommentBlur}
-              placeholder="Добавить комментарий..."
-              className="text-sm resize-none"
-              rows={2}
-            />
+            <Textarea value={comment} onChange={e => setComment(e.target.value)} onBlur={handleCommentBlur} placeholder="Добавить комментарий..." className="text-sm resize-none" rows={2} />
           </div>
 
           {/* Развернутая информация */}
@@ -136,6 +106,5 @@ export const LogEntry: React.FC<LogEntryProps> = ({
           </Collapsible>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
